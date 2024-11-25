@@ -76,11 +76,17 @@ public class VRCFTPicoModule : ExtTrackingModule
                 return -1;
             }
         
-            var completedTask = await Task.WhenAny(tasks);
+            // We need to add a delay here to make sure this completes otherwise we'll get stuck forever if the headset is off
+            var completedTask = await Task.WhenAny(tasks.Concat(new[] { Task.Delay(1000) }));
 
             foreach (var client in Clients) client.Dispose();
+
+            if (completedTask is not Task<UdpReceiveResult> completedUdpTask)
+            {
+                return -1;
+            }
         
-            return Array.IndexOf(tasks, completedTask);
+            return Array.IndexOf(tasks, completedUdpTask);
         }
         catch (Exception ex)
         {

@@ -50,6 +50,9 @@ namespace VRCFTPicoModule.Utils
                 var data = _udpClient.Receive(ref endPoint);
                 var pShape = ParseData(data, _isLegacy);
                 
+                if (pShape.Length == 0)
+                    return;
+                
                 if (_trackingAvailable.Item1)
                     UpdateEye(pShape);
                 

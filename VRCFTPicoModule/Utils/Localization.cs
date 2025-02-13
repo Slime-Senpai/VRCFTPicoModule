@@ -32,7 +32,7 @@ public class Localization
     
     private async Task<string?> LoadResourceAsync(string resourceName)
     {
-        await using var stream = GetType().Assembly.GetManifestResourceStream(resourceName);
+        using var stream = GetType().Assembly.GetManifestResourceStream(resourceName);
         if (stream == null) return null;
         using var reader = new StreamReader(stream);
         return await reader.ReadToEndAsync();
